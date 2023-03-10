@@ -1,23 +1,44 @@
 #!/usr/bin/python3
-"""0. Prime Game
+"""
+Define isWineer function, a solution to the Prime Game problem
 """
 
 
+def primes(n):
+    """Return list of prime numbers between 1 and n inclusive
+       Args:
+        n (int): upper boundary of range. lower boundary is always 1
+    """
+    prime = []
+    sieve = [True] * (n + 1)
+    for p in range(2, n + 1):
+        if (sieve[p]):
+            prime.append(p)
+            for i in range(p, n + 1, p):
+                sieve[i] = False
+    return prime
+
+
 def isWinner(x, nums):
-    """determines the winner of the game"""
-    participants = {'Maria': 0, 'Ben': 0}
-    if x == 0 or x is None:
-        return
+    """
+    Determines winner of Prime Game
+    Args:
+        x (int): no. of rounds of game
+        nums (int): upper limit of range for each round
+    Return:
+        Name of winner (Maria or Ben) or None if winner cannot be found
+    """
+    if x is None or nums is None or x == 0 or nums == []:
+        return None
+    Maria = Ben = 0
     for i in range(x):
-        vals = [num for num in range(1, nums[i] + 1)]
-        currentTurn = 'Maria'
-        while vals != []:
-            currentPick = vals.pop(0)
-            for num in vals:
-                if num % currentPick == 0:
-                    vals.remove(num)
-            currentTurn = 'Ben' if currentTurn == 'Maria' else 'Maria'
-        participants[currentTurn] += 1
-    if participants['Maria'] > participants['Ben']:
+        prime = primes(nums[i])
+        if len(prime) % 2 == 0:
+            Ben += 1
+        else:
+            Maria += 1
+    if Maria > Ben:
         return 'Maria'
-    return 'Ben'
+    elif Ben > Maria:
+        return 'Ben'
+    return None
